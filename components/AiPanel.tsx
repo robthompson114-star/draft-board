@@ -28,7 +28,7 @@ export default function AiPanel({
         players: t.playerIds
           .map((id) => state.players[id])
           .filter(Boolean)
-          .map(({ id, name, pos, team, drafted }) => ({ id, name, pos, team, drafted })),
+          .map(({ id, name, pos, team, drafted, proj }) => ({ id, name, pos, team, drafted, proj })),
       })),
     };
     try {

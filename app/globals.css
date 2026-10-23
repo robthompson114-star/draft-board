@@ -123,7 +123,7 @@ code { font-size: 12px; background: var(--hover); padding: 1px 4px; border-radiu
 
 .row {
   display: grid;
-  grid-template-columns: 20px 32px 44px minmax(0, 1fr) 48px 52px auto;
+  grid-template-columns: 20px 32px 44px minmax(0, 1fr) 48px 52px 52px auto;
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
@@ -136,7 +136,7 @@ code { font-size: 12px; background: var(--hover); padding: 1px 4px; border-radiu
 .row.overlay {
   border: 1px solid var(--accent); border-radius: 6px;
   box-shadow: 0 6px 20px rgb(0 0 0 / 0.2);
-  grid-template-columns: 32px 44px minmax(0, 1fr) 48px;
+  grid-template-columns: 32px 44px minmax(0, 1fr) 48px 52px;
 }
 .row.drafted .name { text-decoration: line-through; color: var(--muted); }
 .row.drafted .pos { opacity: 0.4; }
@@ -158,10 +158,11 @@ code { font-size: 12px; background: var(--hover); padding: 1px 4px; border-radiu
 }
 .name:hover:not(:disabled) { background: none; text-decoration: underline; }
 .team, .posrank { color: var(--muted); font-size: 12px; }
+.proj { font-size: 12px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
 .actions { display: flex; gap: 2px; opacity: 0.5; }
 .row:hover .actions { opacity: 1; }
 @media (max-width: 600px) {
-  .row { grid-template-columns: 20px 26px 38px minmax(0, 1fr) auto; }
+  .row { grid-template-columns: 20px 26px 38px minmax(0, 1fr) 44px auto; }
   .team, .posrank { display: none; }
 }
 

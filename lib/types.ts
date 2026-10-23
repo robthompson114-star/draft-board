@@ -5,6 +5,11 @@ export type Player = {
   team: string;
   drafted: boolean;
   notes?: string;
+  /** Average season half-PPR projection across sources. */
+  proj?: number;
+  /** Per-source half-PPR projections, e.g. { sleeper: 251.3, espn: 240.1 }. */
+  sources?: Record<string, number>;
+  adp?: number;
 };
 
 export type Tier = {
@@ -24,7 +29,14 @@ export type AnalyzeRequest = {
   leagueNotes: string;
   tiers: {
     name: string;
-    players: { id: string; name: string; pos: string; team: string; drafted: boolean }[];
+    players: {
+      id: string;
+      name: string;
+      pos: string;
+      team: string;
+      drafted: boolean;
+      proj?: number;
+    }[];
   }[];
 };
 

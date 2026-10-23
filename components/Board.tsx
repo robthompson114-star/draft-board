@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useMemo, useState } from "react";
 import {
   addTier,
+  boardFromProjections,
   deleteTier,
   findTierIndex,
   isBoardState,
@@ -54,6 +55,7 @@ export default function Board() {
   const [newName, setNewName] = useState("");
   const [newPos, setNewPos] = useState("");
   const [newTeam, setNewTeam] = useState("");
+  const [loadingTop, setLoadingTop] = useState(false);
 
   // Load / persist to this browser.
   useEffect(() => {
@@ -158,6 +160,32 @@ export default function Board() {
     setNewTeam("");
   };
 
+  const loadTop300 = async () => {
+    if (!confirm("Replace your board with the 2026 top 300 (Sleeper + ESPN half-PPR projections)?"))
+      return;
+    setLoadingTop(true);
+    try {
+      const res = await fetch("/api/players");
+      const data = await res.json();
+      if (!res.ok) {
+        const detail = Object.entries(data.sources ?? {})
+          .map(([k, v]) => `${k}: ${(v as { error?: string }).error ?? "ok"}`)
+          .join("; ");
+        throw new Error(`${data.error ?? `Request failed (${res.status})`} ${detail}`);
+      }
+      setState((s) => boardFromProjections(data.players, s.leagueNotes));
+      const missing = Object.entries(data.sources ?? {})
+        .filter(([, v]) => !(v as { ok: boolean }).ok)
+        .map(([k]) => k);
+      if (missing.length)
+        alert(`Loaded ${data.players.length} players. Couldn't reach: ${missing.join(", ")}.`);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoadingTop(false);
+    }
+  };
+
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -208,6 +236,9 @@ export default function Board() {
             {draftedCount}/{total} drafted
           </span>
           <div className="spacer" />
+          <button className="primary" onClick={loadTop300} disabled={loadingTop}>
+            {loadingTop ? "Loading…" : "Load 2026 Top 300"}
+          </button>
           <button onClick={() => update(addTier)}>+ Tier</button>
           <button onClick={() => setImportOpen(true)}>Import</button>
           <button onClick={exportJson}>Export</button>
@@ -287,6 +318,7 @@ export default function Board() {
                 </span>
                 <span className="name">{activePlayer.name}</span>
                 <span className="team">{activePlayer.team}</span>
+                <span className="proj">{activePlayer.proj ?? ""}</span>
               </div>
             ) : null}
           </DragOverlay>
@@ -412,6 +444,18 @@ function PlayerRow(props: {
       </button>
       <span className="team">{p.team}</span>
       <span className="posrank">{props.posRank}</span>
+      <span
+        className="proj"
+        title={
+          p.sources
+            ? Object.entries(p.sources)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(" · ") + (p.adp ? ` · ADP ${p.adp}` : "")
+            : undefined
+        }
+      >
+        {p.proj ?? ""}
+      </span>
       <span className="actions">
         <button className="ghost small" onClick={props.onUp} disabled={props.isFirst} aria-label="Move up">
           ↑

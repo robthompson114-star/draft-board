@@ -132,7 +132,7 @@ export function removePlayer(state: BoardState, playerId: string): BoardState {
 
 /**
  * Parse pasted rankings. One player per line, in rank order:
- *   Name, POS, TEAM[, tier]
+ *   Name, POS, TEAM[, tier[, projected points]]
  * Tabs work too (paste straight from a spreadsheet). A header row is skipped.
  * If a tier column is present, players are grouped by it; otherwise they all land in one tier.
  */
@@ -147,10 +147,18 @@ export function parseImport(text: string): BoardState | null {
 
   const players: Record<string, Player> = {};
   const tierMap = new Map<string, string[]>();
-  for (const [name, pos = "", team = "", tier = "1"] of rows) {
+  for (const [name, pos = "", team = "", tier = "1", projText = ""] of rows) {
     if (!name) continue;
     const id = newId();
-    players[id] = { id, name, pos: pos.toUpperCase(), team: team.toUpperCase(), drafted: false };
+    const proj = parseFloat(projText);
+    players[id] = {
+      id,
+      name,
+      pos: pos.toUpperCase(),
+      team: team.toUpperCase(),
+      drafted: false,
+      ...(Number.isFinite(proj) ? { proj } : {}),
+    };
     const key = tier || "1";
     if (!tierMap.has(key)) tierMap.set(key, []);
     tierMap.get(key)!.push(id);
@@ -164,4 +172,21 @@ export function parseImport(text: string): BoardState | null {
 export function isBoardState(x: unknown): x is BoardState {
   const b = x as BoardState;
   return !!b && typeof b.players === "object" && Array.isArray(b.tiers);
+}
+
+/** Build a fresh board from ranked projections, chunked into tiers of `perTier` (one round in a 12-team league). */
+export function boardFromProjections(
+  ranked: { name: string; pos: string; team: string; proj: number; sources: Record<string, number>; adp?: number }[],
+  leagueNotes: string,
+  perTier = 12,
+): BoardState {
+  const players: Record<string, Player> = {};
+  const tiers: Tier[] = [];
+  ranked.forEach((r, i) => {
+    const id = newId();
+    players[id] = { id, name: r.name, pos: r.pos, team: r.team, drafted: false, proj: r.proj, sources: r.sources, adp: r.adp };
+    if (i % perTier === 0) tiers.push({ id: newId(), name: "", playerIds: [] });
+    tiers[tiers.length - 1].playerIds.push(id);
+  });
+  return { players, tiers: renumber(tiers), leagueNotes };
 }

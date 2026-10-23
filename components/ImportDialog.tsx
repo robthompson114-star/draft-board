@@ -21,7 +21,7 @@ export default function ImportDialog({
       <div className="modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <h2>Import rankings</h2>
         <p className="muted">
-          One player per line in rank order: <code>Name, Pos, Team, Tier</code> (tier optional). Paste
+          One player per line in rank order: <code>Name, Pos, Team, Tier, Proj</code> (tier and projected points optional). Paste
           straight from a spreadsheet, upload a .csv, or paste a board exported as JSON. This replaces
           the current board.
         </p>

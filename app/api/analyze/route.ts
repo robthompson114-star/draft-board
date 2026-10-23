@@ -61,7 +61,9 @@ export async function POST(req: Request) {
         t.players
           .map(
             (p) =>
-              `  - id=${p.id} | ${p.name} | ${p.pos} | ${p.team}${p.drafted ? " | DRAFTED" : ""}`,
+              `  - id=${p.id} | ${p.name} | ${p.pos} | ${p.team}` +
+              (p.proj != null ? ` | proj ${p.proj} half-PPR pts` : "") +
+              (p.drafted ? " | DRAFTED" : ""),
           )
           .join("\n"),
     )
