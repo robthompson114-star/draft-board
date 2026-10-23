@@ -37,6 +37,7 @@ import {
   removePlayer,
   splitTierAt,
 } from "@/lib/board";
+import { downloadBoardPdf } from "@/lib/pdf";
 import { sampleBoard } from "@/lib/sample";
 import type { BoardState, Player } from "@/lib/types";
 import AiPanel from "./AiPanel";
@@ -241,6 +242,7 @@ export default function Board() {
           </button>
           <button onClick={() => update(addTier)}>+ Tier</button>
           <button onClick={() => setImportOpen(true)}>Import</button>
+          <button onClick={() => downloadBoardPdf(state)}>Download PDF</button>
           <button onClick={exportJson}>Export</button>
           <button
             className="ghost"
