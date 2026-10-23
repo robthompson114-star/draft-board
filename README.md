@@ -1,6 +1,7 @@
 # Draft Board
 
 A fantasy draft board for tiering and reranking players, with Claude as a second opinion.
+The homepage lets you pick a sport. NFL, NBA, MLB and NHL each have their own page (`/nfl`, `/nba`, …) and their own saved board.
 
 - **Drag and drop** players within a tier or between tiers (mouse, touch or keyboard)
 - **↑ / ↓** nudge a player one spot. At the edge of a tier, the player moves into the next tier
@@ -45,7 +46,9 @@ automatically retries it on a fallback model.
 ## Layout
 
 ```
-app/page.tsx                 page shell
+app/page.tsx                 homepage (sport picker)
+app/[sport]/page.tsx         one board page per sport
+lib/sports.ts                per-sport settings (name, defaults, sample players)
 app/api/analyze/route.ts     Claude endpoint
 components/Board.tsx         tiers, drag and drop, toolbar
 components/AiPanel.tsx       "Ask Claude" panel

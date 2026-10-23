@@ -6,10 +6,12 @@ export default function ImportDialog({
   onClose,
   onImport,
   onSample,
+  placeholder,
 }: {
   onClose: () => void;
   onImport: (text: string) => boolean;
   onSample: () => void;
+  placeholder: string;
 }) {
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function ImportDialog({
           rows={12}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder={"Bijan Robinson, RB, ATL, 1\nJa'Marr Chase, WR, CIN, 1\nJosh Allen, QB, BUF, 2"}
+          placeholder={placeholder}
         />
         <input
           type="file"

@@ -62,7 +62,7 @@ export async function POST(req: Request) {
           .map(
             (p) =>
               `  - id=${p.id} | ${p.name} | ${p.pos} | ${p.team}` +
-              (p.proj != null ? ` | proj ${p.proj} half-PPR pts` : "") +
+              (p.proj != null ? ` | proj ${p.proj} pts` : "") +
               (p.drafted ? " | DRAFTED" : ""),
           )
           .join("\n"),
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "user",
-          content: `League settings / notes:\n${body.leagueNotes || "(none given)"}\n\nMy board:\n${board}`,
+          content: `Sport: ${body.sport || "NFL"}\n\nLeague settings / notes:\n${body.leagueNotes || "(none given)"}\n\nMy board:\n${board}`,
         },
       ],
     });

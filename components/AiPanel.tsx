@@ -7,9 +7,11 @@ import type { AnalyzeRequest, AnalyzeResponse, BoardState, Suggestion } from "@/
 export default function AiPanel({
   state,
   setState,
+  sportName,
 }: {
   state: BoardState;
   setState: React.Dispatch<React.SetStateAction<BoardState>>;
+  sportName: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +24,7 @@ export default function AiPanel({
     setResult(null);
     setApplied(new Set());
     const body: AnalyzeRequest = {
+      sport: sportName,
       leagueNotes: state.leagueNotes,
       tiers: state.tiers.map((t) => ({
         name: t.name,

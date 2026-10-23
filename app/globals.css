@@ -196,3 +196,53 @@ code { font-size: 12px; background: var(--hover); padding: 1px 4px; border-radiu
 }
 .modal h2 { margin: 0; font-size: 16px; }
 .modal-actions { display: flex; gap: 8px; }
+
+/* Homepage */
+.home { max-width: 880px; margin: 0 auto; padding: 56px 16px 40px; text-align: center; }
+.home h1 { font-size: 36px; margin: 0 0 8px; }
+.home-sub { color: var(--muted); font-size: 16px; max-width: 520px; margin: 0 auto 32px; }
+.sport-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+}
+.sport-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 28px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--sport-color, var(--accent));
+  border-radius: 12px;
+  color: inherit; text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.sport-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgb(0 0 0 / 0.12); }
+.sport-card[data-sport="nfl"] { --sport-color: #30a46c; }
+.sport-card[data-sport="nba"] { --sport-color: #f76b15; }
+.sport-card[data-sport="mlb"] { --sport-color: #e5484d; }
+.sport-card[data-sport="nhl"] { --sport-color: #3e63dd; }
+.sport-emoji { font-size: 44px; line-height: 1; }
+.sport-name { font-size: 22px; font-weight: 800; }
+.sport-tagline { font-size: 13px; color: var(--muted); }
+.home-foot { margin-top: 28px; }
+.back { color: var(--muted); text-decoration: none; font-size: 13px; }
+.back:hover { color: var(--text); }
+
+/* Position colors for NBA / MLB / NHL */
+[data-pos="PG"].pos, .chip[data-pos="PG"].on { background: var(--qb); border-color: var(--qb); color: #fff; }
+[data-pos="SG"].pos, .chip[data-pos="SG"].on { background: var(--te); border-color: var(--te); color: #fff; }
+[data-pos="SF"].pos, .chip[data-pos="SF"].on { background: var(--rb); border-color: var(--rb); color: #fff; }
+[data-pos="PF"].pos, .chip[data-pos="PF"].on { background: var(--wr); border-color: var(--wr); color: #fff; }
+[data-pos="C"].pos, .chip[data-pos="C"].on { background: var(--k); border-color: var(--k); color: #fff; }
+[data-pos="SP"].pos, .chip[data-pos="SP"].on { background: var(--qb); border-color: var(--qb); color: #fff; }
+[data-pos="RP"].pos, .chip[data-pos="RP"].on { background: var(--te); border-color: var(--te); color: #fff; }
+[data-pos="OF"].pos, .chip[data-pos="OF"].on { background: var(--rb); border-color: var(--rb); color: #fff; }
+[data-pos="SS"].pos, .chip[data-pos="SS"].on,
+[data-pos="2B"].pos, .chip[data-pos="2B"].on { background: var(--wr); border-color: var(--wr); color: #fff; }
+[data-pos="1B"].pos, .chip[data-pos="1B"].on,
+[data-pos="3B"].pos, .chip[data-pos="3B"].on,
+[data-pos="DH"].pos, .chip[data-pos="DH"].on { background: #12a594; border-color: #12a594; color: #fff; }
+[data-pos="LW"].pos, .chip[data-pos="LW"].on { background: var(--rb); border-color: var(--rb); color: #fff; }
+[data-pos="RW"].pos, .chip[data-pos="RW"].on { background: var(--wr); border-color: var(--wr); color: #fff; }
+[data-pos="D"].pos, .chip[data-pos="D"].on { background: var(--te); border-color: var(--te); color: #fff; }
+[data-pos="G"].pos, .chip[data-pos="G"].on { background: var(--qb); border-color: var(--qb); color: #fff; }

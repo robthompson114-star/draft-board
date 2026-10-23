@@ -26,6 +26,7 @@ export type BoardState = {
 
 /** What the client sends to /api/analyze. */
 export type AnalyzeRequest = {
+  sport?: string;
   leagueNotes: string;
   tiers: {
     name: string;

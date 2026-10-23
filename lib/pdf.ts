@@ -1,3 +1,4 @@
+import type { Sport } from "./sports";
 import type { BoardState } from "./types";
 
 // Position colors match the on-screen badges (app/globals.css).
@@ -7,6 +8,10 @@ const POS_COLORS: Record<string, [number, number, number]> = {
   WR: [62, 99, 221],
   TE: [247, 107, 21],
   K: [142, 78, 198],
+  PG: [229, 72, 77], SG: [247, 107, 21], SF: [48, 164, 108], PF: [62, 99, 221], C: [142, 78, 198],
+  SP: [229, 72, 77], RP: [247, 107, 21], OF: [48, 164, 108], SS: [62, 99, 221], "2B": [62, 99, 221],
+  "1B": [18, 165, 148], "3B": [18, 165, 148], DH: [18, 165, 148],
+  LW: [48, 164, 108], RW: [62, 99, 221], D: [247, 107, 21], G: [229, 72, 77],
 };
 const DEFAULT_COLOR: [number, number, number] = [111, 110, 119];
 
@@ -15,7 +20,7 @@ const DEFAULT_COLOR: [number, number, number] = [111, 110, 119];
  * and an empty checkbox per player to cross off during the draft.
  * Players already marked drafted get a filled box.
  */
-export async function downloadBoardPdf(state: BoardState) {
+export async function downloadBoardPdf(state: BoardState, sport: Sport) {
   const { jsPDF } = await import("jspdf"); // loaded on demand to keep the page light
   const doc = new jsPDF({ unit: "pt", format: "letter" });
 
@@ -35,10 +40,10 @@ export async function downloadBoardPdf(state: BoardState) {
 
   const header = () => {
     doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(20);
-    doc.text("Draft Board", margin, margin + 8);
+    doc.text(`${sport.name} Draft Board`, margin, margin + 8);
     doc.setFont("helvetica", "normal").setFontSize(7.5).setTextColor(110);
     const notes = state.leagueNotes ? `${state.leagueNotes}  ·  ` : "";
-    doc.text(`${notes}Proj = half-PPR season points  ·  page ${page}`, pageW - margin, margin + 8, {
+    doc.text(`${notes}${sport.projLabel}  ·  page ${page}`, pageW - margin, margin + 8, {
       align: "right",
     });
   };
@@ -114,5 +119,5 @@ export async function downloadBoardPdf(state: BoardState) {
     y += 4;
   }
 
-  doc.save("draft-board.pdf");
+  doc.save(`${sport.slug}-draft-board.pdf`);
 }

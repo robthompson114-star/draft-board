@@ -39,14 +39,19 @@ import {
 } from "@/lib/board";
 import { downloadBoardPdf } from "@/lib/pdf";
 import { sampleBoard } from "@/lib/sample";
+import { SPORTS, type SportSlug } from "@/lib/sports";
 import type { BoardState, Player } from "@/lib/types";
 import AiPanel from "./AiPanel";
 import ImportDialog from "./ImportDialog";
 
-const STORAGE_KEY = "draft-board:v1";
+// NFL keeps the original key so boards saved before multi-sport support still load.
+const storageKey = (sport: SportSlug) =>
+  sport === "nfl" ? "draft-board:v1" : `draft-board:${sport}:v1`;
 
-export default function Board() {
-  const [state, setState] = useState<BoardState>(sampleBoard);
+export default function Board({ sport: slug }: { sport: SportSlug }) {
+  const sport = SPORTS[slug];
+  const STORAGE_KEY = storageKey(slug);
+  const [state, setState] = useState<BoardState>(() => sampleBoard(slug));
   const [loaded, setLoaded] = useState(false);
   const [posFilter, setPosFilter] = useState("ALL");
   const [search, setSearch] = useState("");
@@ -237,12 +242,14 @@ export default function Board() {
             {draftedCount}/{total} drafted
           </span>
           <div className="spacer" />
-          <button className="primary" onClick={loadTop300} disabled={loadingTop}>
-            {loadingTop ? "Loading…" : "Load 2026 Top 300"}
-          </button>
+          {sport.liveTop300 && (
+            <button className="primary" onClick={loadTop300} disabled={loadingTop}>
+              {loadingTop ? "Loading…" : "Load 2026 Top 300"}
+            </button>
+          )}
           <button onClick={() => update(addTier)}>+ Tier</button>
           <button onClick={() => setImportOpen(true)}>Import</button>
-          <button onClick={() => downloadBoardPdf(state)}>Download PDF</button>
+          <button onClick={() => downloadBoardPdf(state, sport)}>Download PDF</button>
           <button onClick={exportJson}>Export</button>
           <button
             className="ghost"
@@ -334,7 +341,7 @@ export default function Board() {
         </form>
       </main>
 
-      <AiPanel state={state} setState={setState} />
+      <AiPanel state={state} setState={setState} sportName={sport.name} />
 
       {importOpen && (
         <ImportDialog
@@ -356,7 +363,8 @@ export default function Board() {
             setState((s) => ({ ...next, leagueNotes: s.leagueNotes }));
             return true;
           }}
-          onSample={() => setState(sampleBoard())}
+          onSample={() => setState(sampleBoard(slug))}
+          placeholder={sport.importPlaceholder}
         />
       )}
     </div>
